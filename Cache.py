@@ -4,6 +4,12 @@ class Cache(object):
         self.b_size = int(b_size)
         self.assoc = int(assoc)
 
+        #code done by kris
+        self.nbits_offset=math.log2(self.b_size)
+        self.nbits_indice=math.log2(self.n_sets)
+        self.nbits_tag=32-self.nbits_offset-self.nbits_indice
+        #
+
         self.n_acessos = 0
         self.n_hits = 0
         self.misses = 0
@@ -15,8 +21,67 @@ class Cache(object):
         self.dirt = np.ones((n_sets, assoc), dtype=np.int32)
         self.tags = np.zeros((n_sets, assoc), dtype=np.int32)
 
+        #code done by kris
+        self.val=[]
+        for i in range (0, self.n_sets):
+            self.val[i]=assocArray[self.assoc] # TODO for each there is a array for the associativity
+        #
+
+
     def findDirect(self, end):
         """Direct mapping"""
         end = end%self.n_sets
         try:
             list(self.info[end]).index()
+
+
+    ###TODO GENERAL TEST MISSES AND HITS###
+    def readCache(self, end, value)
+        if value in self.val([end%self.n_sets]):  # TODO testa se o dado esta no vetor
+            hit++; #TODO create global hit
+            self.n_hits++;
+            return self.val[???] #TODO retornar valor
+
+        else
+            self.misses++ #TODO verify the miss type
+            misses++ #TODO Create a global misses variable
+            aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
+            
+            if self.dirt[end%self.n_sets][aux]==1: #TODO if dirty bit is on, save its previous value in the lower memory
+                #######TODO CODE TO CHECK IF THE MEMORY IS THE FIRST OR THE SECOND LEVEL#########
+                #if cache is level 1 then
+                Memory.L2.writeCache #write previous data into lower
+                Memory.L2.readCache #read data from lower
+
+            else #if dirty bit is off then
+                Memory.L2.readCache #read from lower
+                self.dirt[end%self.n_sets][aux]==0 #mark as not dirty
+                self.val[end%self.n_sets][aux]=value
+                #TODO return value read
+
+            
+    def writeCache(self, end, value)
+        if value in self.val([end%self.n_sets]):  # TODO testa se o dado esta no vetor
+            hit++; #TODO create global hit
+            self.n_hits++; 
+            self.val[end%self.n_sets][aux]=value #TODO if the tag is already in the cache, just update the value if necessary
+            self.dirt[end%self.n_sets][aux]=1 #TODO mark dirty as 1
+
+        else
+            self.misses++ #TODO verify the miss type
+            misses++ #TODO Create a global misses variable
+            aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
+            
+            if self.dirt[end%self.n_sets][aux]==1: #TODO if dirty bit is on, save its previous value in the lower memory
+                #######TODO CODE TO CHECK IF THE MEMORY IS THE FIRST OR THE SECOND LEVEL#########
+                #if cache is level 1 then
+                Memory.L2.writeCache #write previous data into lower
+                Memory.L2.readCache #read data from lower
+
+            else #if dirty bit is off then
+                Memory.L2.readCache #read from lower
+                self.val[end%self.n_sets][aux]=value #TODO if the tag is already in the cache, just update the value if necessary
+                self.dirt[end%self.n_sets][aux]=1 #TODO mark dirty as 1
+
+           
+
