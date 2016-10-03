@@ -22,9 +22,9 @@ class Cache(object):
         self.tags = np.zeros((n_sets, assoc), dtype=np.int32)
 
         #code done by kris
-        self.val=[]
+        self.val=[[]]
         for i in range (0, self.n_sets):
-            self.val[i]=assocArray[self.assoc] # TODO for each there is a array for the associativity
+            self.val.append([]) # TODO for each there is a array for the associativity
         #
 
 
@@ -37,17 +37,19 @@ class Cache(object):
 
     ###TODO GENERAL TEST MISSES AND HITS###
     def readCache(self, end, value)
-        if value in self.val([end%self.n_sets]):  # TODO testa se o dado esta no vetor
-            hit++; #TODO create global hit
-            self.n_hits++;
-            return self.val[???] #TODO retornar valor
+        #if value in self.val[end%self.n_sets][:  # TODO testa se o dado esta no vetor
+        for i in range(0, n_sets):
+            if (value==self.val[end%self.n_sets][i]):
+                hit++; #TODO create global hit
+                self.n_hits++;
+                return self.val[i][j] #TODO2 this way to return?
 
         else
             self.misses++ #TODO verify the miss type
-            misses++ #TODO Create a global misses variable
+            
             aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
             
-            if self.dirt[end%self.n_sets][aux]==1: #TODO if dirty bit is on, save its previous value in the lower memory
+            if (self.dirt[end%self.n_sets][aux]==1): #TODO if dirty bit is on, save its previous value in the lower memory
                 #######TODO CODE TO CHECK IF THE MEMORY IS THE FIRST OR THE SECOND LEVEL#########
                 #if cache is level 1 then
                 Memory.L2.writeCache #write previous data into lower
@@ -61,11 +63,12 @@ class Cache(object):
 
             
     def writeCache(self, end, value)
-        if value in self.val([end%self.n_sets]):  # TODO testa se o dado esta no vetor
-            hit++; #TODO create global hit
-            self.n_hits++; 
-            self.val[end%self.n_sets][aux]=value #TODO if the tag is already in the cache, just update the value if necessary
-            self.dirt[end%self.n_sets][aux]=1 #TODO mark dirty as 1
+        for i in range(0, n_sets):
+            if (value==self.val[end%self.n_sets][i]):
+                hit++; #TODO create global hi t
+                self.n_hits++; 
+                self.val[end%self.n_sets][aux]=value #TODO if the tag is already in the cache, just update the value if necessary
+                self.dirt[end%self.n_sets][aux]=1 #TODO mark dirty as 1
 
         else
             self.misses++ #TODO verify the miss type
