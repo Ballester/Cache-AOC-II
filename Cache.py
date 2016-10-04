@@ -36,13 +36,13 @@ class Cache(object):
 
 
     ###TODO GENERAL TEST MISSES AND HITS###
-    def readCache(self, end, value)
+    def readCache(self, end, value, level)
         #if value in self.val[end%self.n_sets][:  # TODO testa se o dado esta no vetor
         for i in range(0, n_sets):
             if (value==self.val[end%self.n_sets][i]):
                 hit++; #TODO create global hit
                 self.n_hits++;
-                return self.val[i][j] #TODO2 this way to return?
+                #return self.val[i][j] #TODO2 this way to return?
 
         else
             self.misses++ #TODO verify the miss type
@@ -52,13 +52,22 @@ class Cache(object):
             if (self.dirt[end%self.n_sets][aux]==1): #TODO if dirty bit is on, save its previous value in the lower memory
                 #######TODO CODE TO CHECK IF THE MEMORY IS THE FIRST OR THE SECOND LEVEL#########
                 #if cache is level 1 then
-                Memory.L2.writeCache #write previous data into lower
-                Memory.L2.readCache #read data from lower
+                if(level==1):
+                
+                    prevData=self.val[end%self.n_sets][aux]
+                    Memory.L2.readCache(self, end, prevData, level+1) #read data from lower
+                    Memory.L2.writeCache(self, end, prevData, level+1) #write previous data into lower
+
+                else if (level==2):
+                    self.misses++
 
             else #if dirty bit is off then
-                Memory.L2.readCache #read from lower
-                self.dirt[end%self.n_sets][aux]==0 #mark as not dirty
-                self.val[end%self.n_sets][aux]=value
+                if(level==1)   
+                    Memory.L2.readCache #read from lower
+                    self.dirt[end%self.n_sets][aux]==0 #mark as not dirty
+                    self.val[end%self.n_sets][aux]=value
+                else if (level==2)
+                    self.misses++
                 #TODO return value read
 
             
@@ -72,7 +81,7 @@ class Cache(object):
 
         else
             self.misses++ #TODO verify the miss type
-            misses++ #TODO Create a global misses variable
+            
             aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
             
             if self.dirt[end%self.n_sets][aux]==1: #TODO if dirty bit is on, save its previous value in the lower memory
