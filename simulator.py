@@ -19,7 +19,11 @@ if __name__ == '__main__':
             cmd = struct.unpack('i', (tokens[i+4]+tokens[i+5]+tokens[i+6]+tokens[i+7])[::-1])[0]
             print (end, cmd)
 
-   #testa se e dado ou instrucao
-   #testa se e leitura ou escrita
+    #testa se e dado ou instrucao
+    #testa se e leitura ou escrita
 
-   #flagHit=Memory.L1i.readCache(self, end, inputNum, 0)
+    flagHit=L1i.readCache(self, end, inputNum, 0)
+    if(flagHit==False):
+        if(L1i.locateCacheBlock()==True):
+            
+

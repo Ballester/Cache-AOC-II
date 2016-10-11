@@ -1,5 +1,5 @@
 import sys
-#from Cache import Cache
+from Cache import Cache
 
 class Memory(object):
     def __init__(self):
@@ -12,12 +12,15 @@ class Memory(object):
         l2_flags = sys.argv[7].split(':')
 
         """Instantiate Caches"""
-        #self.L1i = Cache(l1i_flags[0], l1i_flags[1], l1i_flags[2])
-        #self.L1d = Cache(l1d_flags[0], l1d_flags[1], l1d_flags[2])
-        #self.L2 = Cache(l2_flags[0], l2_flags[1], l2_flags[2])
+        self.L1i = Cache(l1i_flags[0], l1i_flags[1], l1i_flags[2])
+        self.L1d = Cache(l1d_flags[0], l1d_flags[1], l1d_flags[2])
+        self.L2 = Cache(l2_flags[0], l2_flags[1], l2_flags[2])
 
     def read(self, end):
         self.L1i.findDirect(end)
 
     def write(self, end):
         pass
+
+    def printB():
+        L1i.printBits()
