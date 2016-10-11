@@ -25,7 +25,7 @@ class Cache(object):
         self.val=[[]]
         for i in range (0, self.n_sets):
             self.val.append([]) # TODO for each there is a array for the associativity
-        #
+        #   
 
 
     def findDirect(self, end):
@@ -36,13 +36,13 @@ class Cache(object):
 
 
     ###TODO GENERAL TEST MISSES AND HITS###
-    def readCache(self, end, value, level)
-        #if value in self.val[end%self.n_sets][:  # TODO testa se o dado esta no vetor
-        for i in range(0, n_sets):
+    def readCache(self, end, value, level):
+        #if value in self.val[end%self.n_sets]:  
+        for i in range (0, self.assoc):
             if (value==self.val[end%self.n_sets][i]):
-                hit++; #TODO create global hit
-                self.n_hits++;
-                #return self.val[i][j] #TODO2 this way to return?
+                #hit++ #TODO create global hit
+                self.n_hits++
+                return True #TODO2 this way to return?
 
         else
             self.misses++ #TODO verify the miss type
@@ -57,15 +57,17 @@ class Cache(object):
                     prevData=self.val[end%self.n_sets][aux]
                     Memory.L2.readCache(self, end, prevData, level+1) #read data from lower
                     Memory.L2.writeCache(self, end, prevData, level+1) #write previous data into lower
+                    self.dirt[end%self.n_sets][aux]==0 #mark as not dirty
+                    #self.val[end%self.n_sets][aux]=value
 
                 else if (level==2):
                     self.misses++
 
             else #if dirty bit is off then
                 if(level==1)   
-                    Memory.L2.readCache #read from lower
+                    Memory.L2.readCache() #read from lower
                     self.dirt[end%self.n_sets][aux]==0 #mark as not dirty
-                    self.val[end%self.n_sets][aux]=value
+                    #self.val[end%self.n_sets][aux]=value
                 else if (level==2)
                     self.misses++
                 #TODO return value read
@@ -74,8 +76,8 @@ class Cache(object):
     def writeCache(self, end, value)
         for i in range(0, n_sets):
             if (value==self.val[end%self.n_sets][i]):
-                hit++; #TODO create global hi t
-                self.n_hits++; 
+                hit++ #TODO create global hi t
+                self.n_hits++ 
                 self.val[end%self.n_sets][aux]=value #TODO if the tag is already in the cache, just update the value if necessary
                 self.dirt[end%self.n_sets][aux]=1 #TODO mark dirty as 1
 
@@ -87,8 +89,8 @@ class Cache(object):
             if self.dirt[end%self.n_sets][aux]==1: #TODO if dirty bit is on, save its previous value in the lower memory
                 #######TODO CODE TO CHECK IF THE MEMORY IS THE FIRST OR THE SECOND LEVEL#########
                 #if cache is level 1 then
-                Memory.L2.writeCache #write previous data into lower
-                Memory.L2.readCache #read data from lower
+                Memory.L2.writeCache() #write previous data into lower
+                Memory.L2.readCache() #read data from lower
 
             else #if dirty bit is off then
                 Memory.L2.readCache #read from lower
