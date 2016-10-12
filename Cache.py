@@ -107,9 +107,9 @@ class Cache(object):
 
         else:
             
-            if (len(val[index])==self.b_size/4)
+            if (len(val[index])==self.b_size/4):
                 misses_cap+=1
-            elif (sel.miss_comp==False)
+            elif (sel.miss_comp==False):
                 misses_conf+=1
             self.miss_comp=True
             self.misses += 1 #TODO verify the miss type
@@ -143,7 +143,7 @@ class Cache(object):
                 prevTag=self.val[index][aux] #
                 prevIndex=(prevTag * (2^(self.nbits_offset + self.nbits_indice)))+index 
                 hitL2=L2.writeCache(self, prevTag * (2^self.nbits_offset+self.nbits_indice)) #salva dado antigo na memoria
-                if (hitL2==false)
+                if (hitL2==False):
                     locateCacheBlock(self, prevTag * (2^self.nbits_offset+self.nbits_indice))
                 self.dirt[index][aux]=0 #mark como nao sujo
                 self.val[index][aux]=tag

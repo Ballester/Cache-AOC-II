@@ -44,7 +44,6 @@ if __name__ == '__main__':
             
 
 #TODO LIST
-#- DO MISS TYPE
 #- DO DATA/INST
 #- DO localite
 #- checkout the index and tag calculous
