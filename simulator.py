@@ -19,27 +19,29 @@ if __name__ == '__main__':
             cmd = struct.unpack('i', (tokens[i+4]+tokens[i+5]+tokens[i+6]+tokens[i+7])[::-1])[0]
             print (end, cmd)
 
-    #testa se e dado ou instrucao
-    #testa se e leitura ou escrita
-    if (cmd==1):
-        flagHit=L1i.readCache(self, end)#le a cache
-        #se acertar, tranquilo
+            #testa se e dado ou instrucao
+            #testa se e leitura ou escrita
+            if (cmd==0):
+                flagHit = memory.l1i.readCache(end)#le a cache
+                #se acertar, tranquilo
 
-        #se errar:
-        if(flagHit==False):
-            L1i.locateCacheBlock()#chama funcao pra localizar bloco novo
-            flagHit=L2.readCache(self, end) #le segundo nivel
-            if(flagHit==False): #se errar no segundoS
-                L2.locateCacheBlock()
+                #se errar:
+                if(not flagHit):
+                    next = memory.l1i.locateCacheBlock(end)#chama funcao pra localizar bloco novo
+                    if (next != -1):
+                        memory.l2.writeCache(next)
+                    flagHit = memory.l2.readCache(end) #le segundo nivel
+                    if(not flagHit): #se errar no segundoS
+                        memory.l2.locateCacheBlock(end)
 
-    if(cmd==2):
-        flagHit=L1i.writeCache(self, end)
+            if(cmd==1):
+                flagHit = memory.l1i.writeCache(end)
 
-        if (flagHit==False):
-            L1i.locateCacheBlock(self, end)
-            flagHit=l2.readCache(self, end)
-            if(flagHit==False):
-                l2.locateCacheBlock(self, end)
+                if (flagHit==False):
+                    L1i.locateCacheBlock(end)
+                    flagHit = memory.l2.readCache(end)
+                    if(flagHit==False):
+                        memory.l2.locateCacheBlock(end)
 
             
 

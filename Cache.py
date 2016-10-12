@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import random
 
 class Cache(object):
     def __init__(self, n_sets, b_size, assoc):
@@ -21,16 +22,12 @@ class Cache(object):
         self.misses_cap = 0
         self.misses_conf = 0
 
+        self.dirt = np.zeros((self.n_sets, self.assoc))
+        self.tags = np.zeros((self.n_sets, self.assoc))
         
-        self.dirt = np.ones((n_sets, assoc), dtype=np.int32)
-        self.tags = np.zeros((n_sets, assoc), dtype=np.int32)
-
-
         #code done by kris
-        self.val=[[]]
-        for i in range (0, self.n_sets):
-            self.val.append([]) # TODO for each there is a array for the associativity
-        #   
+        self.val = np.zeros((self.n_sets/self.assoc, self.assoc))
+        self.val.fill(-1)   
 
 
     def findDirect(self, end):
@@ -46,18 +43,18 @@ class Cache(object):
 
 
     def calculateTag(self, end):
-        end=int(end/pow(2, self.nbits_offset + self.nbits_indice))
+        end=int(end/(2**(self.nbits_offset + self.nbits_indice)))
         return end
 
     def calculateIndex(self, end):
-        end=int(end/pow(2, self.nbits_offset)) % n_sets
+        end=int(end/(2**self.nbits_offset)) % self.n_sets
         return end
 
     ###TODO GENERAL TEST MISSES AND HITS###
     def readCache(self, end):
         #if value in self.val[end%self.n_sets]:  
-        tag=calculateTag(end)
-        index=calculateIndex(end)
+        tag = self.calculateTag(end)
+        index = self.calculateIndex(end)
         for i in range (0, self.assoc):
             if (tag==self.val[index][i]):
                 #hit++ #TODO create global hit
@@ -95,13 +92,13 @@ class Cache(object):
 
             
     def writeCache(self, end):
-        tag=calculateTag(end)
-        index=calculateIndex(end)
+        tag=self.calculateTag(end)
+        index=self.calculateIndex(end)
         for i in range (0, self.assoc):
             if (tag==self.val[index][i]):
                 self.n_hits += 1 
-                self.val[index][aux]=tag #TODO if the tag is already in the cache, just update the value if necessary
-                self.dirt[index][aux]=1 #TODO mark dirty as 1
+                self.val[index][i]=tag #TODO if the tag is already in the cache, just update the value if necessary
+                self.dirt[index][i]=1 #TODO mark dirty as 1
                 
                 return True
 
@@ -130,45 +127,20 @@ class Cache(object):
                 self.dirt[index][aux]=1 #TODO mark dirty as 1
                 '''''
 
-    def locateCacheBlock(self, end, level):
-        if(level==1):
-
-            aux = random.randint(0, self.assoc) #cria randomico
-            
-            tag=calculateTag(end)#calcula tag
-            
-            index=calculateIndex(end)#calcula index
-            
-            if (self.dirt[index][aux]==1):
-                prevTag=self.val[index][aux] #
-                prevIndex=(prevTag * (2^(self.nbits_offset + self.nbits_indice)))+index 
-                hitL2=L2.writeCache(self, prevTag * (2^self.nbits_offset+self.nbits_indice)) #salva dado antigo na memoria
-                if (hitL2==False):
-                    locateCacheBlock(self, prevTag * (2^self.nbits_offset+self.nbits_indice))
-                self.dirt[index][aux]=0 #mark como nao sujo
-                self.val[index][aux]=tag
-                return True
-            else:
-                self.dirt[index][aux]=0
-                self.val[index][aux]=tag
-                return False
-
-        elif(level==2):
-            aux = random.randint(0, self.assoc) #cria randomico
-            
-            tag=calculateTag(end)#calcula tag
-            
-            index=calculateIndex(end)#calcula index
-            
-            if (self.dirt[index][aux]==1):
-                self.dirt[index][aux]=0 #mark como nao sujo
-                self.val[index][aux]=tag
-                return True
-            else:
-                self.dirt[index][aux]=0
-                self.val[index][aux]=tag
-                return False
-
-            #self.misses+1
-
     
+    def locateCacheBlock(self, end):
+        aux = random.randint(0, self.assoc-1) #cria randomico
+        
+        tag = self.calculateTag(end)#calcula tag
+        
+        index = self.calculateIndex(end)#calcula index
+        
+        if (self.dirt[index][aux]==1):
+            prevTag=self.val[index][aux] #
+            prevIndex=(prevTag * (2**(self.nbits_offset + self.nbits_indice)))+index 
+            self.dirt[index][aux]=0 #mark como nao sujo
+            self.val[index][aux]=tag
+            return prevIndex
+        else:
+            self.val[index][aux]=tag
+            return -1
