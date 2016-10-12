@@ -53,7 +53,7 @@ class Cache(object):
         return end
 
     ###TODO GENERAL TEST MISSES AND HITS###
-    def readCache(self, end, value, level):
+    def readCache(self, end):
         #if value in self.val[end%self.n_sets]:  
         tag=calculateTag(end)
         index=calculateIndex(end)
@@ -65,8 +65,9 @@ class Cache(object):
 
         else:
             self.misses += 1 #TODO verify the miss type
+            return False
             
-            aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
+            """aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
             
             if (self.dirt[index][aux]==1): #TODO if dirty bit is on, save its previous value in the lower memory
                 #######TODO CODE TO CHECK IF THE MEMORY IS THE FIRST OR THE SECOND LEVEL#########
@@ -89,11 +90,13 @@ class Cache(object):
                     #self.val[end%self.n_sets][aux]=value
                 elif (level==2):
                     self.misses += 1
-                #TODO return value read
+                #TODO return value read"""
 
             
-    def writeCache(self, end, value):
-        for i in range(0, n_sets):
+    def writeCache(self, end):
+        tag=calculateTag(end)
+        index=calculateIndex(end)
+        for i in range (0, self.assoc):
             if (tag==self.val[index][i]):
                 self.n_hits += 1 
                 self.val[index][aux]=tag #TODO if the tag is already in the cache, just update the value if necessary
@@ -102,7 +105,9 @@ class Cache(object):
 
         else:
             self.misses += 1 #TODO verify the miss type
-            
+            return False
+
+            ''''
             aux = random.randint(0, self.assoc) #TODO generate a random number to find  a place to allocate the value
             
             if self.dirt[index][aux]==1: #TODO if dirty bit is on, save its previous value in the lower memory
@@ -115,14 +120,29 @@ class Cache(object):
                 Memory.L2.readCache #read from lower
                 self.val[index][aux]=value #TODO if the tag is already in the cache, just update the value if necessary
                 self.dirt[index][aux]=1 #TODO mark dirty as 1
+                '''''
 
-    def locateCacheBlock(self):
-        aux = random.randint(0, self.assoc)
-        tag=calculateTag(end)
-        index=calculateIndex(end)
-        if self.dirt[index][aux]==1:
-            return True
-        else:
-            return False
+    def locateCacheBlock(self, end, level):
+        if(level==1):
+
+            aux = random.randint(0, self.assoc) #cria randomico
+            
+            tag=calculateTag(end)#calcula tag
+            
+            index=calculateIndex(end)#calcula index
+            
+            if (self.dirt[index][aux]==1):
+                prevTag=self.val[index][aux] #
+                prevIndex=(prevTag * (2^(self.nbits_offset + self.nbits_indice)))+index 
+                L2.writeCache(self, end, prevTag * (2^self.nbits_offset+self.nbits_indice)) #salva dado antigo na memoria
+                self.dirt[index][aux]=0 #mark como nao sujo
+                self.val[index][aux]=tag
+                return True
+            else:
+                self.dirt[index][aux]=0
+                return False
+
+        if(level==2):
+            self.misses+1
 
     

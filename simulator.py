@@ -21,9 +21,30 @@ if __name__ == '__main__':
 
     #testa se e dado ou instrucao
     #testa se e leitura ou escrita
+    if (cmd==1):
+        flagHit=L1i.readCache(self, end)#le a cache
+        #se acertar, tranquilo
 
-    flagHit=L1i.readCache(self, end, inputNum, 0)
-    if(flagHit==False):
-        if(L1i.locateCacheBlock()==True):
+        #se errar:
+        if(flagHit==False):
+            L1i.locateCacheBlock()#chama funcao pra localizar bloco novo
+            flagHit=L2.readCache(self, end) #le segundo nivel
+            if(flagHit==False): #se errar no segundo
+                L2.locateCacheBlock()
+
+    if(cmd==2):
+        flagHit=L1i.writeCache(self, end)
+
+        if (flagHit==False):
+            L1i.locateCacheBlock()
+            flagHit=l2.readCache(self, end)
+            if(flagHit==False):
+                l2.locateCacheBlock()
+
             
 
+#TODO LIST
+#- DO MISS TYPE
+#- DO DATA/INST
+#- DO localite
+#- checkout the index and tag calculous
