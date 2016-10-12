@@ -29,17 +29,17 @@ if __name__ == '__main__':
         if(flagHit==False):
             L1i.locateCacheBlock()#chama funcao pra localizar bloco novo
             flagHit=L2.readCache(self, end) #le segundo nivel
-            if(flagHit==False): #se errar no segundo
+            if(flagHit==False): #se errar no segundoS
                 L2.locateCacheBlock()
 
     if(cmd==2):
         flagHit=L1i.writeCache(self, end)
 
         if (flagHit==False):
-            L1i.locateCacheBlock()
+            L1i.locateCacheBlock(self, end)
             flagHit=l2.readCache(self, end)
             if(flagHit==False):
-                l2.locateCacheBlock()
+                l2.locateCacheBlock(self, end)
 
             
 

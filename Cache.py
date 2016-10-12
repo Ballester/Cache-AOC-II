@@ -17,13 +17,14 @@ class Cache(object):
         self.n_acessos = 0
         self.n_hits = 0
         self.misses = 0
-        self.misses_comp = 0
+        self.misses_comp = False
         self.misses_cap = 0
         self.misses_conf = 0
 
         
         self.dirt = np.ones((n_sets, assoc), dtype=np.int32)
         self.tags = np.zeros((n_sets, assoc), dtype=np.int32)
+
 
         #code done by kris
         self.val=[[]]
@@ -81,9 +82,9 @@ class Cache(object):
                     #self.val[end%self.n_sets][aux]=value
 
                 elif (level==2):
-                    self.misses += 1
+                    self.misses += else
 
-            else: #if dirty bit is off then
+            1: #if dirty bit is off then
                 if(level==1):   
                     Memory.L2.readCache() #read from lower
                     self.dirt[index][aux]==0 #mark as not dirty
@@ -101,9 +102,16 @@ class Cache(object):
                 self.n_hits += 1 
                 self.val[index][aux]=tag #TODO if the tag is already in the cache, just update the value if necessary
                 self.dirt[index][aux]=1 #TODO mark dirty as 1
+                
                 return True
 
         else:
+            
+            if (len(val[index])==self.b_size/4)
+                misses_cap+=1
+            elif (sel.miss_comp==False)
+                misses_conf+=1
+            self.miss_comp=True
             self.misses += 1 #TODO verify the miss type
             return False
 
@@ -134,15 +142,33 @@ class Cache(object):
             if (self.dirt[index][aux]==1):
                 prevTag=self.val[index][aux] #
                 prevIndex=(prevTag * (2^(self.nbits_offset + self.nbits_indice)))+index 
-                L2.writeCache(self, end, prevTag * (2^self.nbits_offset+self.nbits_indice)) #salva dado antigo na memoria
+                hitL2=L2.writeCache(self, prevTag * (2^self.nbits_offset+self.nbits_indice)) #salva dado antigo na memoria
+                if (hitL2==false)
+                    locateCacheBlock(self, prevTag * (2^self.nbits_offset+self.nbits_indice))
                 self.dirt[index][aux]=0 #mark como nao sujo
                 self.val[index][aux]=tag
                 return True
             else:
                 self.dirt[index][aux]=0
+                self.val[index][aux]=tag
                 return False
 
-        if(level==2):
-            self.misses+1
+        elif(level==2):
+            aux = random.randint(0, self.assoc) #cria randomico
+            
+            tag=calculateTag(end)#calcula tag
+            
+            index=calculateIndex(end)#calcula index
+            
+            if (self.dirt[index][aux]==1):
+                self.dirt[index][aux]=0 #mark como nao sujo
+                self.val[index][aux]=tag
+                return True
+            else:
+                self.dirt[index][aux]=0
+                self.val[index][aux]=tag
+                return False
+
+            #self.misses+1
 
     
