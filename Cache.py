@@ -12,6 +12,7 @@ class Cache(object):
         self.nbits_offset=math.log(self.b_size,2)
         self.nbits_indice=math.log(self.n_sets,2)
         self.nbits_tag=32-self.nbits_offset-self.nbits_indice
+        print self.nbits_offset, self.nbits_indice, self.nbits_tag
         
         #
 
@@ -59,9 +60,12 @@ class Cache(object):
             if (tag==self.val[index][i]):
                 #hit++ #TODO create global hit
                 self.n_hits += 1
+                print "HIT- index:", index, "i:", i, "tag: ", tag
                 return True #TODO2 this way to return?
+                
 
         else:
+            print "MISS"
             self.misses += 1 #TODO verify the miss type
             return False
             
