@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
                 if (not flagHit):
                     next = memory.l1i.locateCacheBlock(end)
-                    if(next!=-1)
+                    if(next!=-1):
                         memory.l2.writeCache(next)
                     flagHit = memory.l2.readCache(end)
                     if(not flagHit):

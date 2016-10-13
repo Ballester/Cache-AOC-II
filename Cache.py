@@ -65,9 +65,9 @@ class Cache(object):
                 
 
         else:
-            if (self.misses_comp==0)
+            if (self.misses_comp==0):
                 self.misses_comp=1
-            else
+            else:
                 self.misses_conf+=1
             print "MISS"
             self.misses += 1 #TODO verify the miss type
@@ -112,11 +112,11 @@ class Cache(object):
 
         else:
             
-            if (len(self.val[index])==self.b_size/4):
-                self.misses_cap += 1
-            elif (not self.misses_comp):
-                self.misses_conf += 1
-            self.misses_comp=True
+            if (self.misses_comp==0):
+                self.misses_comp=1
+            else:
+                self.misses_conf+=1
+            print "MISS"
             self.misses += 1 #TODO verify the miss type
             return False
 
