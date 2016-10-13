@@ -31,4 +31,7 @@ class Memory(object):
         misses += np.array(self.l1d.getMisses())
         misses += np.array(self.l2.getMisses())
         return misses
+        
+    def getHits(self):
+        return self.l1i.n_hits + self.l1d.n_hits + self.l2.n_hits
     

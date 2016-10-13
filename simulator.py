@@ -1,7 +1,6 @@
 from Memory import Memory
 import sys
 import struct
-import matplotlib.pyplot as plt
 import numpy as np
 
 if __name__ == '__main__':
@@ -24,7 +23,10 @@ if __name__ == '__main__':
             #testa se e dado ou instrucao
             #testa se e leitura ou escrita
             if (cmd==0):
-                flagHit = memory.l1i.readCache(end)#le a cache
+                if end > 15 :
+                    flagHit = memory.l1i.readCache(end)#le a cache
+                else:
+                    flagHit = memory.l1d.readCache(end)
                 #se acertar, tranquilo
 
                 #se errar:
@@ -37,18 +39,44 @@ if __name__ == '__main__':
                         memory.l2.locateCacheBlock(end)
 
             if(cmd==1):
-                flagHit = memory.l1i.writeCache(end)
-
+                if end > 15:
+                    flagHit = memory.l1d.writeCache(end)
+                else:
+                    flagHit = memory.l1i.writeCache(end)
                 if (not flagHit):
-                    next = memory.l1i.locateCacheBlock(end)
+                    if end > 15:
+                        next = memory.l1d.writeCache(end)
+                    else:
+                        next = memory.l1i.locateCacheBlock(end)
                     if(next!=-1):
                         memory.l2.writeCache(next)
                     flagHit = memory.l2.readCache(end)
                     if(not flagHit):
                         memory.l2.locateCacheBlock(end)
 
-        plt.bar(np.arange(3), memory.getMisses(), 0.35) 
-        plt.show()
+    print 'Misses compulsorios | Misses capacidade | Misses conflito'
+    print 'Misses totais: ', tuple(memory.getMisses())
+    print 'Misses l1i: ', memory.l1i.getMisses()
+    print 'Misses l1d: ', memory.l1d.getMisses()
+    print 'Misses l2: ', memory.l2.getMisses()
+    print 'Hits totais: ', memory.getHits()
+    print 'Hits l1i: ', memory.l1i.n_hits
+    print 'Hits l1d: ', memory.l1d.n_hits
+    print 'Hits l2: ', memory.l2.n_hits
+    
+    total_acessos_l1i = memory.l1i.n_hits + memory.l1i.misses
+    total_acessos_l1d = memory.l1d.n_hits + memory.l1d.misses
+    total_acessos_l2 = memory.l2.n_hits + memory.l2.misses
+    total_acessos = total_acessos_l1i + total_acessos_l1d + total_acessos_l2
+    print 'Miss ratio total: ', float(sum(memory.getMisses())/total_acessos)
+    print 'Miss ratio l1i: ', float(memory.l1i.misses/total_acessos_l1i)
+    print 'Miss ratio l1d: ', float(memory.l1d.misses/total_acessos_l1d)
+    print 'Miss ratio l2: ', float(memory.l2.misses/total_acessos_l2)
+    print 'Hit ratio total: ', float(memory.getHits()/total_acessos)
+    print 'Hit ratio l1i: ', float(memory.l1i.n_hits/total_acessos)
+    print 'Hit ratio l1d: ', float(memory.l1d.n_hits/total_acessos)
+    print 'Hit ratio l2: ', float(memory.l2.n_hits/total_acessos)
+    
 
 #TODO LIST
 #- DO DATA/INST

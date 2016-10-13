@@ -19,7 +19,7 @@ class Cache(object):
         self.n_acessos = 0
         self.n_hits = 0
         self.misses = 0
-        self.misses_comp = False
+        self.misses_comp = np.zeros(self.n_sets)
         self.misses_cap = 0
         self.misses_conf = 0
 
@@ -65,8 +65,8 @@ class Cache(object):
                 
 
         else:
-            if (self.misses_comp==0):
-                self.misses_comp=1
+            if (self.misses_comp[index]==0):
+                self.misses_comp[index]=1
             else:
                 self.misses_conf+=1
             print "MISS"
@@ -112,8 +112,8 @@ class Cache(object):
 
         else:
             
-            if (self.misses_comp==0):
-                self.misses_comp=1
+            if (self.misses_comp[index]==0):
+                self.misses_comp[index]=1
             else:
                 self.misses_conf+=1
             print "MISS"
@@ -154,4 +154,5 @@ class Cache(object):
             return -1
             
     def getMisses(self):
-        return (self.misses_comp, self.misses_cap, self.misses_conf)
+        n_misses_comp = len([1 for i in self.misses_comp if i==1])
+        return (n_misses_comp, self.misses_cap, self.misses_conf)
