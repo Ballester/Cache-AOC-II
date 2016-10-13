@@ -39,10 +39,12 @@ if __name__ == '__main__':
             if(cmd==1):
                 flagHit = memory.l1i.writeCache(end)
 
-                if (flagHit==False):
-                    memory.l1i.locateCacheBlock(end)
+                if (not flagHit):
+                    next = memory.l1i.locateCacheBlock(end)
+                    if(next!=-1)
+                        memory.l2.writeCache(next)
                     flagHit = memory.l2.readCache(end)
-                    if(flagHit==False):
+                    if(not flagHit):
                         memory.l2.locateCacheBlock(end)
 
         plt.bar(np.arange(3), memory.getMisses(), 0.35) 

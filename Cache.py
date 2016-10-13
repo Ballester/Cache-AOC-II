@@ -65,6 +65,10 @@ class Cache(object):
                 
 
         else:
+            if (self.misses_comp==0)
+                self.misses_comp=1
+            else
+                self.misses_conf+=1
             print "MISS"
             self.misses += 1 #TODO verify the miss type
             return False
