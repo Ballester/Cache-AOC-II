@@ -108,11 +108,11 @@ class Cache(object):
 
         else:
             
-            if (len(val[index])==self.b_size/4):
-                misses_cap+=1
-            elif (sel.miss_comp==False):
-                misses_conf+=1
-            self.miss_comp=True
+            if (len(self.val[index])==self.b_size/4):
+                self.misses_cap += 1
+            elif (not self.misses_comp):
+                self.misses_conf += 1
+            self.misses_comp=True
             self.misses += 1 #TODO verify the miss type
             return False
 
@@ -148,3 +148,6 @@ class Cache(object):
         else:
             self.val[index][aux]=tag
             return -1
+            
+    def getMisses(self):
+        return (self.misses_comp, self.misses_cap, self.misses_conf)

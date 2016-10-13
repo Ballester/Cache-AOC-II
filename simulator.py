@@ -1,6 +1,8 @@
 from Memory import Memory
 import sys
 import struct
+import matplotlib.pyplot as plt
+import numpy as np
 
 if __name__ == '__main__':
     if len(sys.argv) != 9:
@@ -38,12 +40,13 @@ if __name__ == '__main__':
                 flagHit = memory.l1i.writeCache(end)
 
                 if (flagHit==False):
-                    L1i.locateCacheBlock(end)
+                    memory.l1i.locateCacheBlock(end)
                     flagHit = memory.l2.readCache(end)
                     if(flagHit==False):
                         memory.l2.locateCacheBlock(end)
 
-            
+        plt.bar(np.arange(3), memory.getMisses(), 0.35) 
+        plt.show()
 
 #TODO LIST
 #- DO DATA/INST

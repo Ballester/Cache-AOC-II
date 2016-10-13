@@ -1,5 +1,6 @@
 import sys
 from Cache import Cache
+import numpy as np
 
 class Memory(object):
     def __init__(self):
@@ -25,4 +26,9 @@ class Memory(object):
     def printB(self):
         self.l1i.printBits()
         
+    def getMisses(self):
+        misses = np.array(self.l1i.getMisses())
+        misses += np.array(self.l1d.getMisses())
+        misses += np.array(self.l2.getMisses())
+        return misses
     
