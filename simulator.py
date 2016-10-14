@@ -24,14 +24,17 @@ if __name__ == '__main__':
             #testa se e leitura ou escrita
             if (cmd==0):
                 if end > 15 :
-                    flagHit = memory.l1i.readCache(end)#le a cache
+                    flagHit = memory.l1d.readCache(end)#le a cache
                 else:
-                    flagHit = memory.l1d.readCache(end)
+                    flagHit = memory.l1i.readCache(end)
                 #se acertar, tranquilo
 
                 #se errar:
                 if(not flagHit):
-                    next = memory.l1i.locateCacheBlock(end)#chama funcao pra localizar bloco novo
+                    if end>15:
+                        next = memory.l1d.locateCacheBlock(end)
+                    else:
+                        next = memory.l1i.locateCacheBlock(end)#chama funcao pra localizar bloco novo
                     if (next != -1):
                         memory.l2.writeCache(next)
                     flagHit = memory.l2.readCache(end) #le segundo nivel
@@ -45,7 +48,7 @@ if __name__ == '__main__':
                     flagHit = memory.l1i.writeCache(end)
                 if (not flagHit):
                     if end > 15:
-                        next = memory.l1d.writeCache(end)
+                        next = memory.l1d.locateCacheBlock(end)
                     else:
                         next = memory.l1i.locateCacheBlock(end)
                     if(next!=-1):
@@ -68,14 +71,13 @@ if __name__ == '__main__':
     total_acessos_l1d = memory.l1d.n_hits + memory.l1d.misses
     total_acessos_l2 = memory.l2.n_hits + memory.l2.misses
     total_acessos = total_acessos_l1i + total_acessos_l1d + total_acessos_l2
-    print 'Miss ratio total: ', float(sum(memory.getMisses())/total_acessos)
-    print 'Miss ratio l1i: ', float(memory.l1i.misses/total_acessos_l1i)
-    print 'Miss ratio l1d: ', float(memory.l1d.misses/total_acessos_l1d)
-    print 'Miss ratio l2: ', float(memory.l2.misses/total_acessos_l2)
-    print 'Hit ratio total: ', float(memory.getHits()/total_acessos)
-    print 'Hit ratio l1i: ', float(memory.l1i.n_hits/total_acessos)
-    print 'Hit ratio l1d: ', float(memory.l1d.n_hits/total_acessos)
-    print 'Hit ratio l2: ', float(memory.l2.n_hits/total_acessos)
+    print 'Miss ratio total: ', round((float(sum(memory.getMisses()))/float(total_acessos)), 3)   
+    print 'Miss ratio l1i: ', round((float(memory.l1i.misses)/float(total_acessos_l1i)), 3)
+    print 'Miss ratio l1d: ', round((float(memory.l1d.misses)/float(total_acessos_l1d)), 3)   
+    print 'Miss ratio l2: ', round((float(memory.l2.misses)/float(total_acessos_l2)), 3)
+    print 'Hit ratio total: ', round((float(memory.getHits())/float(total_acessos)), 3)
+    print 'Hit ratio l1i: ', round((float(memory.l1i.n_hits)/float(total_acessos)), 3)
+    print 'Hit ratio l2: ', round((float(memory.l2.n_hits)/float(total_acessos)), 3)
     
 
 #TODO LIST

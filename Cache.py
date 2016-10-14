@@ -48,7 +48,7 @@ class Cache(object):
         return end
 
     def calculateIndex(self, end):
-        end=int(end/(2**self.nbits_offset)) % self.n_sets
+        end=int(end/(2**self.nbits_offset)) % (self.n_sets/self.assoc)
         return end
 
     ###TODO GENERAL TEST MISSES AND HITS###
@@ -56,6 +56,7 @@ class Cache(object):
         #if value in self.val[end%self.n_sets]:  
         tag = self.calculateTag(end)
         index = self.calculateIndex(end)
+        #print index
         for i in range (0, self.assoc):
             if (tag==self.val[index][i]):
                 #hit++ #TODO create global hit
@@ -107,7 +108,7 @@ class Cache(object):
                 self.n_hits += 1 
                 self.val[index][i]=tag #TODO if the tag is already in the cache, just update the value if necessary
                 self.dirt[index][i]=1 #TODO mark dirty as 1
-                
+                print "HIT- index:", index, "i:", i, "tag: ", tag
                 return True
 
         else:
