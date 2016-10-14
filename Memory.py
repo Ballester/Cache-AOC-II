@@ -34,4 +34,9 @@ class Memory(object):
         
     def getHits(self):
         return self.l1i.n_hits + self.l1d.n_hits + self.l2.n_hits
+
+    def getWriteMiss(self):
+        return (self.l1i.getWriteMiss(), self.l1d.getWriteMiss(), self.l2.getWriteMiss())
+       
+        
     

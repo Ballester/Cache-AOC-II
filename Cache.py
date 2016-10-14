@@ -5,7 +5,7 @@ import random
 class Cache(object):
     def __init__(self, n_sets, b_size, assoc):
         self.n_sets = int(n_sets)
-        self.b_size = int(b_size)
+        self.b_size = int(b_size)/4
         self.assoc = int(assoc)
 
         #code done by kris
@@ -29,6 +29,8 @@ class Cache(object):
         #code done by kris
         self.val = np.zeros((self.n_sets/self.assoc, self.assoc))
         self.val.fill(-1)   
+
+        self.writeMisses = 0
 
 
     def findDirect(self, end):
@@ -112,7 +114,7 @@ class Cache(object):
                 return True
 
         else:
-            
+            self.writeMisses += 1
             if (self.misses_comp[index]==0):
                 self.misses_comp[index]=1
             else:
@@ -157,3 +159,6 @@ class Cache(object):
     def getMisses(self):
         n_misses_comp = len([1 for i in self.misses_comp if i==1])
         return (n_misses_comp, self.misses_cap, self.misses_conf)
+
+    def getWriteMiss(self):
+        return self.writeMisses
