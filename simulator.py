@@ -93,15 +93,42 @@ if __name__ == '__main__':
     print 'Hits l2: ', memory.l2.n_hits
     
     print '\n-MISS RATIO:'
-    print 'Miss ratio total: ', round((float(sum(memory.getMisses()))/float(total_acessos)), 3)   
-    print 'Miss ratio l1i: ', round((float(memory.l1i.misses)/float(total_acessos_l1i)), 3)
-    print 'Miss ratio l1d: ', round((float(memory.l1d.misses)/float(total_acessos_l1d)), 3)   
-    print 'Miss ratio l2: ', round((float(memory.l2.misses)/float(total_acessos_l2)), 3)
+    
+    print 'Miss ratio total: ', round((float(sum(memory.getMisses()))/float(total_acessos)), 3)
+
+    if(not total_acessos_l1i==0):
+        print 'Miss ratio l1i: ', round((float(memory.l1i.misses)/float(total_acessos_l1i)), 3)
+    else:
+        print 'total acessos l1 inst = 0'
+
+    if(not total_acessos_l1d==0):
+        print 'Miss ratio l1d: ', round((float(memory.l1d.misses)/float(total_acessos_l1d)), 3)
+    else:
+        print 'total acessos l1 dados = 0'
+
+    if(not total_acessos_l2==0):
+        print 'Miss ratio l2: ', round((float(memory.l2.misses)/float(total_acessos_l2)), 3)
+    else:
+        print 'total acessos l2 = 0'
     print '\n-HIT RATIO:'
+
     print 'Hit ratio total: ', round((float(memory.getHits())/float(total_acessos)), 3)
-    print 'Hit ratio l1i: ', round((float(memory.l1i.n_hits)/float(total_acessos)), 3)
-    print 'Hit ratio l1d: ', round((float(memory.l1d.n_hits)/float(total_acessos)), 3)
-    print 'Hit ratio l2: ', round((float(memory.l2.n_hits)/float(total_acessos)), 3)
+
+    if(not total_acessos_l1i==0):
+        print 'Hit ratio l1i: ', round((float(memory.l1i.n_hits)/float(total_acessos_l1i)), 3)
+    else:
+        print 'total acessos l1 inst = 0'
+
+    if(not total_acessos_l1d==0):
+        print 'Hit ratio l1d: ', round((float(memory.l1d.n_hits)/float(total_acessos_l1d)), 3)
+    else:
+        print 'total acessos l1 dados = 0'
+
+    if(not total_acessos_l2==0):
+        print 'Hit ratio l2: ', round((float(memory.l2.n_hits)/float(total_acessos_l2)), 3)
+    else:
+        print 'total acessos l2 = 0'
+
 
     print '\nTotal de escritas:', writeNumber
     print 'Total de leituras:', readNumber
